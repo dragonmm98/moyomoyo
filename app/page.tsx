@@ -56,6 +56,7 @@ function NavLinks({ t }: { t: ReturnType<typeof useLanguage>["t"] }) {
       <a href="#review">{t.nav.review}</a>
       <a href="#purchase">{t.nav.purchase}</a>
       <a href="#qa">{t.nav.qa}</a>
+      <a href="#contact">{t.nav.contact}</a>
     </>
   );
 }
@@ -63,7 +64,12 @@ function NavLinks({ t }: { t: ReturnType<typeof useLanguage>["t"] }) {
 function Arrow() { return <span className="cta-arrow" aria-hidden="true"><i /></span>; }
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+  const reviewWallSrc = {
+    en: "/global-reviews-grid.png",
+    fil: "/global-reviews-grid-fil.png",
+    ru: "/global-reviews-grid-ru.png",
+  }[locale];
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -103,7 +109,6 @@ export default function Home() {
           <p>{t.hero.body}</p>
           <a className="pill-button" href="#brand-story">{t.hero.cta} <Arrow /></a>
         </header>
-        <aside className="hero-caption"><p>{t.hero.caption}<br />{t.hero.captionMeta}</p></aside>
         <a href="#brand-story" className="scroll-mark" aria-label={t.hero.scrollAria}><span>{t.hero.scroll}</span><i>↓</i></a>
       </section>
 
@@ -173,13 +178,63 @@ export default function Home() {
           {t.promise.cards.map((item) => <article key={item.number}><span>{item.number}</span><h3>{item.title}</h3><p>{item.text}</p></article>)}
         </div>
         <div className="proof-grid">
-          <figure className="proof-main"><Image src={assetUrl("/global-testing-certificates.png")} alt={t.promise.imageAlt} width={1254} height={1254} sizes="86vw" loading="lazy" decoding="async" /><figcaption><b>{t.promise.proofTitle}</b><span>{t.promise.proofNote}</span></figcaption></figure>
+          <figure className="proof-main">
+            {locale === "en" ? (
+              <Image src={assetUrl("/global-testing-certificates.png")} alt={t.promise.imageAlt} width={1254} height={1254} sizes="86vw" loading="lazy" decoding="async" />
+            ) : (
+              <div className="proof-panel">
+                <header className="proof-intro">
+                  <p>{t.promise.proofKicker}</p>
+                  <h3>{t.promise.proofHeading}</h3>
+                  <p>{t.promise.proofSub}</p>
+                </header>
+                <div className="proof-docs">
+                  <article className="proof-doc">
+                    <h4>{t.promise.sheetTitle}</h4>
+                    <dl>
+                      <div><dt>{t.promise.productNameLabel}</dt><dd>{t.promise.productName}</dd></div>
+                      <div><dt>{t.promise.reportNoLabel}</dt><dd>{t.promise.reportNo}</dd></div>
+                      <div><dt>{t.promise.testTypeLabel}</dt><dd>{t.promise.testType}</dd></div>
+                      <div><dt>{t.promise.resultLabel}</dt><dd>{t.promise.result}</dd></div>
+                      <div><dt>{t.promise.judgmentLabel}</dt><dd>{t.promise.result}</dd></div>
+                    </dl>
+                    <p>{t.promise.sheetSummary}</p>
+                  </article>
+                  <article className="proof-doc">
+                    <h4>{t.promise.lab}</h4>
+                    <p className="proof-doc-kicker">{t.promise.reportTitle}</p>
+                    <ul>
+                      {t.promise.assessments.map((item) => (
+                        <li key={item.name}><span>{item.name}</span><b>{item.result}</b></li>
+                      ))}
+                    </ul>
+                    <p><span>{t.promise.institutionLabel}</span> {t.promise.institution}</p>
+                  </article>
+                  <article className="proof-doc proof-cert">
+                    <aside className="proof-seal" aria-hidden="true">
+                      <small>{t.promise.sealTop}</small>
+                      <b>{t.promise.sealCenter}</b>
+                      <small>{t.promise.sealBottom}</small>
+                    </aside>
+                    <h4>{t.promise.certTitle}</h4>
+                    <p className="proof-doc-kicker">{t.promise.certBy}</p>
+                    <dl>
+                      <div><dt>{t.promise.requestedLabel}</dt><dd>{t.promise.requested}</dd></div>
+                      <div><dt>{t.promise.sampleLabel}</dt><dd>{t.promise.productName}</dd></div>
+                      <div><dt>{t.promise.gradeLabel}</dt><dd>{t.promise.grade}</dd></div>
+                    </dl>
+                  </article>
+                </div>
+              </div>
+            )}
+            <figcaption><b>{t.promise.proofTitle}</b><span>{t.promise.proofNote}</span></figcaption>
+          </figure>
         </div>
       </section>
 
       <section className="review" id="review">
         <header className="review-header"><div><p className="overline">{t.review.overline}</p><h2>{t.review.title}<br /><em>{t.review.titleEm}</em></h2></div><div className="rating"><b>4.9</b><span aria-label={t.review.stars}>★★★★★</span><small>{t.review.ratingNote}</small></div></header>
-        <figure className="review-wall"><Image src={assetUrl("/global-reviews-grid.png")} alt={t.review.wallAlt} width={1672} height={941} sizes="90vw" loading="lazy" decoding="async" /></figure>
+        <figure className="review-wall"><Image src={assetUrl(reviewWallSrc)} alt={t.review.wallAlt} width={1672} height={941} sizes="90vw" loading="lazy" decoding="async" /></figure>
         <div className="review-editorial">
           <figure className="before-after"><Image src={assetUrl("/before-after.png")} alt={t.review.beforeAlt} width={485} height={843} sizes="(max-width: 760px) calc(100vw - 32px), 23vw" loading="lazy" decoding="async" /><figcaption>{t.review.beforeCaption}<br /><span>{t.review.beforeNote}</span></figcaption></figure>
           <figure className="review-quote"><Image src={assetUrl("/global-real-reviews.png")} alt={t.review.quoteAlt} width={1122} height={1402} sizes="(max-width: 760px) calc(100vw - 32px), 44vw" loading="lazy" decoding="async" /><figcaption>{t.review.quote}</figcaption></figure>
@@ -211,6 +266,23 @@ export default function Home() {
       <section className="closing">
         <figure className="closing-image"><video autoPlay muted loop playsInline preload="none" poster={assetUrl("/product-still-life.png")} aria-label={t.closing.videoAria}><source src={assetUrl("/moyomoyo-premium-hero.mp4")} type="video/mp4" /></video></figure>
         <header className="closing-copy"><p className="overline">{t.closing.overline}</p><h2>{t.closing.title}<br /><em>{t.closing.titleEm}</em></h2><a href="#purchase" className="pill-button">{t.closing.cta} <Arrow /></a></header>
+      </section>
+
+      <section className="contact" id="contact">
+        <header className="contact-copy">
+          <p className="overline">{t.contact.overline}</p>
+          <h2>{t.contact.title}<br /><em>{t.contact.titleEm}</em></h2>
+          <p>{t.contact.intro}</p>
+        </header>
+        <div className="contact-details">
+          {t.contact.items.map((item) => (
+            <p key={item.label}>
+              <span>{item.label}</span>
+              {"href" in item && item.href ? <a href={item.href}>{item.value}</a> : <b>{item.value}</b>}
+            </p>
+          ))}
+          <small>{t.contact.escrow}</small>
+        </div>
       </section>
 
       </main>
